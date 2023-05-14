@@ -6,10 +6,12 @@ import { AppComponent } from './app.component'
 import { HeaderComponent } from './header/header.component'
 import { HomeComponent } from './home/home.component'
 import { HttpClientModule } from '@angular/common/http'
+import { ConfigService } from './services/config.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 @NgModule({
 	declarations: [AppComponent, HeaderComponent, HomeComponent],
-	imports: [BrowserModule, AppRoutingModule, HttpClientModule],
-	providers: [],
+	imports: [BrowserModule, AppRoutingModule, HttpClientModule, BrowserAnimationsModule],
+	providers: [ConfigService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {}
