@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http'
-import { Observable, catchError, retry, throwError } from 'rxjs'
+import { Observable, catchError, retry, throwError, map } from 'rxjs'
+import { Product } from '../common/models'
 
 export interface Config {
 	heroesUrl: string
@@ -44,5 +45,34 @@ export class ConfigService {
 		}
 		// Return an observable with a user-facing error message.
 		return throwError(() => new Error('Something bad happened; please try again later.'))
+	}
+
+	getProducts(req: any) {
+		const { lang, page, sort, category, maxPrice } = req
+		const addCategory = category ? { category } : {}
+		const categoryQuery = category ? '&category=' + category : ''
+		const priceQuery = maxPrice ? '&maxPrice=' + maxPrice : ''
+		const productsUrl =
+			'http://localhost:4000' +
+			'/api/products?lang=' +
+			lang +
+			'&page=' +
+			page +
+			'&sort=' +
+			sort +
+			categoryQuery +
+			priceQuery
+		return this.http.get(productsUrl, {}).pipe(
+			map((data: any) => ({
+				products: data.all.map((product: Product) => ({
+					...product,
+					tags: product.tags.filter(Boolean).map((cat: string) => cat.toLowerCase())
+				})),
+				pagination: data.pagination,
+				maxPrice: data.maxPrice,
+				minPrice: data.minPrice,
+				...addCategory
+			}))
+		)
 	}
 }

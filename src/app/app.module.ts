@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
-
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { HeaderComponent } from './header/header.component'
@@ -9,7 +8,9 @@ import { HttpClientModule } from '@angular/common/http'
 import { ConfigService } from './services/config.service'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { StoreModule } from '@ngrx/store'
-import { counterReducer } from './store/reducers/counter.reducer'
+import { reducers } from './store/reducers'
+import { EffectsModule } from '@ngrx/effects'
+import { AppEffects } from './store/effects'
 @NgModule({
 	declarations: [AppComponent, HeaderComponent, HomeComponent],
 	imports: [
@@ -17,7 +18,8 @@ import { counterReducer } from './store/reducers/counter.reducer'
 		AppRoutingModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
-		StoreModule.forRoot({ count: counterReducer })
+		StoreModule.forRoot(reducers),
+		EffectsModule.forRoot([AppEffects])
 	],
 	providers: [ConfigService],
 	bootstrap: [AppComponent]

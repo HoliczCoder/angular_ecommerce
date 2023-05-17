@@ -143,3 +143,18 @@ export function productReducer(state = initialState, action: PayloadAction): Sta
 			return state
 	}
 }
+
+export const products = (state: State) => state.products
+export const loadingProducts = (state: State) => state.loadingProducts
+export const categories = (state: State) => state.categories
+export const pagination = (state: State) => state.pagination
+export const product = (state: State) => state.product
+export const cart = (state: State) => state.cart
+export const productLoading = (state: State) => state.loadingProduct
+export const userOrders = (state: State) => state.userOrders
+export const order = (state: State) => state.order
+export const productsTitles = (state: State) => state.productsTitles
+export const priceFilter = (state: State) => state.priceFilter
+export const maxPrice = (state: State) => state.maxPrice
+export const minPrice = (state: State) => state.minPrice
+export const position = (state: State) => state.position

@@ -20,7 +20,7 @@ export class Reset implements Action {
 	readonly type = ActionTypes.Reset
 }
 
-// real code
+// PRODUCT
 
 export enum EshopActions {
 	CleanError = '[Product] Clean Error',

@@ -1,4 +1,5 @@
-import { map, distinctUntilChanged, filter, take, skip, withLatestFrom } from 'rxjs/operators'
+import { State } from './../store/reducers/product.reducer'
+import { map, distinctUntilChanged, filter, take, skip, withLatestFrom, retry } from 'rxjs/operators'
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core'
 import { Observable, combineLatest, Subscription } from 'rxjs'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -8,6 +9,8 @@ import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar'
 import { Product, Cart, Category, Pagination } from '../common/models'
 import { sortOptions } from '../common/constants'
 import { ConfigService } from '../services/config.service'
+import * as actions from '../store/actions'
+import * as fromRoot from '../store/reducers/index'
 
 export interface Config {
 	heroesUrl: string
@@ -23,6 +26,7 @@ export interface Config {
 })
 export class HomeComponent implements OnDestroy {
 	product$!: Observable<Product>
+	products$!: Observable<Product[] | null>
 	cartId$!: Observable<{ [productId: string]: number }>
 	cart$!: Observable<Cart>
 	loadingProducts$!: Observable<boolean>
@@ -50,7 +54,14 @@ export class HomeComponent implements OnDestroy {
 	public headers: any
 	public config!: Config
 
-	constructor(private configService: ConfigService) {}
+	constructor(private configService: ConfigService, private store: Store<fromRoot.State>) {
+		this.products$ = this.store.select(fromRoot.getProducts).pipe(
+			filter(products => {
+				console.log('products', products)
+				return !!products
+			})
+		)
+	}
 
 	showConfigResponse() {
 		this.configService.getConfigResponse().subscribe(resp => {
@@ -67,5 +78,16 @@ export class HomeComponent implements OnDestroy {
 	ngOnDestroy(): void {
 		this.categoriesSub.unsubscribe()
 		this.productsSub.unsubscribe()
+	}
+
+	ngOnInit(): void {
+		// dispatch to get data here ?
+		this.store.dispatch(
+			new actions.GetProduct({
+				lang: 'en',
+				page: 0,
+				sort: 'newest'
+			})
+		)
 	}
 }
